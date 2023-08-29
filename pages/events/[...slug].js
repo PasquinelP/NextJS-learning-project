@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { getFilteredEvents } from "../../dummy-data";
 import ResultsTitle from "../../components/events/results-title";
 import EventList from "../../components/events/event-list";
+import Button from "../../components/ui/button";
+import ErrorAlert from "../../components/ui/error-alert";
 
 function FilteredEventsPage() {
   const router = useRouter ();
@@ -22,7 +24,16 @@ function FilteredEventsPage() {
   // Check if it is not a number, for example when someone types in a word in the url manually
   // also the range of year and month
   if (isNaN(numYear) || isNaN(numMonth) || numYear > 2030 || numYear < 2021 || numMonth < 1 || numMonth > 12) {
-    return <p>Invalid filter, please adjust your values and try again.</p>
+    return (
+      <>
+        <ErrorAlert>
+          <p>Invalid filter, please adjust your values and try again.</p>
+        </ErrorAlert>
+        <div className="center">
+          <Button link="/events">Show all events</Button>
+        </div>
+      </>
+    );
   }
 
   const filteredEvents = getFilteredEvents({
@@ -32,7 +43,16 @@ function FilteredEventsPage() {
 
   // Check if filteredEvents is is somehow falsy or the array is empty
   if (!filteredEvents || filteredEvents.length === 0) {
-    return <p>No events found for the chosen filter!</p>
+    return (
+      <>
+        <ErrorAlert>
+          <p>No events found for the chosen filter!</p>
+        </ErrorAlert>
+        <div className="center">
+          <Button link="/events">Show all events</Button>
+        </div>
+      </>
+    );
   }
 
   const date = new Date(numYear, numMonth - 1);
